@@ -43,6 +43,18 @@ async def scramble(ctx, *, message):
             time.sleep(delay)
             await ctx.send("Result:\n" + g_translate.find_element_by_xpath(out_box).text)
 
+@bot.command(name="stop")
+@commands.is_owner()
+async def shutdown(ctx):
+    "shuts down bot of command issuer is the same as dev acc for bot"
+    await ctx.send("seeya")
+    await ctx.bot.close()
+
+@bot.event
+async def on_command_error(ctx, error):
+    #my approach to this is just have an if else chain to catch errors...
+    if isinstance(error, discord.ext.commands.errors.NotOwner):
+        await ctx.send("You are not cool enough to do that.")
 
 bot.run(DontStealMyToken)
 

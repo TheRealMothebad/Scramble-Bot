@@ -15,7 +15,7 @@ options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
 g_translate = webdriver.Chrome(options=options)
 out_box = '/html/body/c-wiz/div/div[2]/c-wiz/div[2]/c-wiz/div[1]/div[2]/div[2]/c-wiz[2]/div[5]/div/div[1]'
-crazyness = 5
+crazyness = 8
 delay = 4
 
 bot = commands.Bot(command_prefix="`")
@@ -32,6 +32,7 @@ async def randomTranslate(ctx, sentence):
 
 @bot.command(name="scramble", aliases=['s', 'garble'])
 async def scramble(ctx, *, message):
+    "scrambles whatever sentence you put after the command"
     for x in range(1, crazyness):
         if x == 1:
             input_text = message
@@ -42,6 +43,30 @@ async def scramble(ctx, *, message):
             g_translate.get(await url_maker("en", input_text))
             time.sleep(delay)
             await ctx.send("Result:\n" + g_translate.find_element_by_xpath(out_box).text)
+
+@bot.command(name="delay")
+@commands.is_owner()
+async def setDelay(ctx, msg):
+    global delay
+    try:
+        if int(msg) >= 4 and int(msg) <= 10:
+            delay = int(msg)
+            await ctx.send("Delay has been changed to: " + str(delay))
+    except:
+        await ctx.send("You did an oopsie :')  (must be a number between 4 and 10 inclusive")
+
+@bot.command(name="crazy", aliases=["c", "iterations", "loops", "translations"])
+async def setCrazy(ctx, msg):
+    global crazyness
+    try:
+        if int(msg) >= 2 and int(msg) <= 12:
+            crazyness = int(msg)
+            await ctx.send("Crazyness has been changed to: " + str(crazyness))
+    except:
+        await ctx.send("You did an oopsie :')  (must be a number between 2 and 12 inclusive")
+
+
+
 
 @bot.command(name="stop")
 @commands.is_owner()
